@@ -11,7 +11,6 @@
 				font-size:13px;
 				text-align:center;
 
-				background-color: rgba(0,0,0,0);
 				margin: 0px;
 				overflow: hidden;
 			}
@@ -35,6 +34,8 @@
 		<div id="info"><a href="http://threejs.org" target="_blank">three.js</a> webgl - buffergeometry - uint</div>
 
 		<script src="vendor/three.min.js"></script>
+		<script src="vendor/ColladaLoader.js"></script>
+		<script src="vendor/TrackballControls.js"></script>
 
 		<script>
 
@@ -54,29 +55,44 @@
 				//
 
 				camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 1, 3500 );
-				camera.position.z = 2750;
+				camera.position.z = 1000;
+
+				controls = new THREE.TrackballControls( camera );
+				controls.rotateSpeed = 5.0;
+				controls.zoomSpeed = 3;
+				controls.panSpeed = 0.8;
+				controls.noZoom = false;
+				controls.noPan = false;
+				controls.staticMoving = true;
+				controls.dynamicDampingFactor = 0.3;
+				controls.keys = [ 65, 83, 68 ];
+				controls.addEventListener( 'change', render );
 
 				scene = new THREE.Scene();
-				scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
+				scene.fog = new THREE.Fog( 0x88ccff, 2000, 3500 );
+
+				// get the camera in the scene, so we can make the light move with the camera
+				scene.add(camera);
 
 				//
 
-				scene.add( new THREE.AmbientLight( 0x444444 ) );
+				scene.add( new THREE.AmbientLight( 0x666666 ) );
 
-				var light1 = new THREE.DirectionalLight( 0xffffff, 0.5 );
-				light1.position.set( 1, 1, 1 );
-				scene.add( light1 );
+				var dLight1 = new THREE.DirectionalLight( 0xffffff, 0.5 );
+				dLight1.position.set( 1, 1, 1 );
+				camera.add( dLight1 );
+				camera.add( dLight1.target );
 
-				var light2 = new THREE.DirectionalLight( 0xffffff, 1.5 );
-				light2.position.set( 0, -1, 0 );
-				scene.add( light2 );
+				var dLight2 = new THREE.DirectionalLight( 0x888888, 0.5 );
+				dLight2.position.set( -1, 0, 0 );
+				camera.add( dLight2 );
+				camera.add( dLight2.target );
 
 				//
 
 				var triangles = 160000;
 
 				var geometry = new THREE.BufferGeometry();
-
 
 
 				var indices = new Uint32Array( triangles * 3 );
@@ -198,13 +214,22 @@
 				} );
 
 				mesh = new THREE.Mesh( geometry, material );
-				scene.add( mesh );
+				//scene.add( mesh );
 
-				//
+				// Snippet from https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_collada.html
+				var loader = new THREE.ColladaLoader();
+				loader.options.convertUpAxis = true;
+				loader.load( './dome-jig-angles.dae', function ( collada ) {
+					var object = collada.scene;
+					object.scale.set( 10, 10, 10 );
+					object.position.set( 0, 0, 0 );
+					scene.add( object );
+				} );
 
-				renderer = new THREE.WebGLRenderer( { antialias: false, alpha : true } );
-				renderer.setClearColor(0x000000, 0);
-				// renderer.setClearColor( scene.fog.color );
+
+				renderer = new THREE.WebGLRenderer( { antialias: false } );
+				// renderer.setClearColor(0x000000, 0);
+				renderer.setClearColor( scene.fog.color );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -226,6 +251,8 @@
 
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
+				controls.handleResize();
+				render();
 			}
 
 			//
@@ -234,6 +261,7 @@
 
 				requestAnimationFrame( animate );
 
+				controls.update();
 				render();
 
 			}
