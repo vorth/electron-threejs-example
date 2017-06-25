@@ -49,149 +49,71 @@ function init() {
 	camera.add( dLight2 );
 	camera.add( dLight2.target );
 
-	//
-
-	var triangles = 160000;
-
-	var geometry = new THREE.BufferGeometry();
-
-
-	var indices = new Uint32Array( triangles * 3 );
-
-	for ( var i = 0; i < indices.length; i ++ ) {
-
-		indices[ i ] = i;
-
-	}
-
-	var positions = new Float32Array( triangles * 3 * 3 );
-	var normals = new Float32Array( triangles * 3 * 3 );
-	var colors = new Float32Array( triangles * 3 * 3 );
-
-	var color = new THREE.Color();
-
-	var n = 800, n2 = n/2;	// triangles spread in the cube
-	var d = 12, d2 = d/2;	// individual triangle size
-
-	var pA = new THREE.Vector3();
-	var pB = new THREE.Vector3();
-	var pC = new THREE.Vector3();
-
-	var cb = new THREE.Vector3();
-	var ab = new THREE.Vector3();
-
-	for ( var i = 0; i < positions.length; i += 9 ) {
-
-		// positions
-
-		var x = Math.random() * n - n2;
-		var y = Math.random() * n - n2;
-		var z = Math.random() * n - n2;
-
-		var ax = x + Math.random() * d - d2;
-		var ay = y + Math.random() * d - d2;
-		var az = z + Math.random() * d - d2;
-
-		var bx = x + Math.random() * d - d2;
-		var by = y + Math.random() * d - d2;
-		var bz = z + Math.random() * d - d2;
-
-		var cx = x + Math.random() * d - d2;
-		var cy = y + Math.random() * d - d2;
-		var cz = z + Math.random() * d - d2;
-
-		positions[ i ]     = ax;
-		positions[ i + 1 ] = ay;
-		positions[ i + 2 ] = az;
-
-		positions[ i + 3 ] = bx;
-		positions[ i + 4 ] = by;
-		positions[ i + 5 ] = bz;
-
-		positions[ i + 6 ] = cx;
-		positions[ i + 7 ] = cy;
-		positions[ i + 8 ] = cz;
-
-		// flat face normals
-
-		pA.set( ax, ay, az );
-		pB.set( bx, by, bz );
-		pC.set( cx, cy, cz );
-
-		cb.subVectors( pC, pB );
-		ab.subVectors( pA, pB );
-		cb.cross( ab );
-
-		cb.normalize();
-
-		var nx = cb.x;
-		var ny = cb.y;
-		var nz = cb.z;
-
-		normals[ i ]     = nx;
-		normals[ i + 1 ] = ny;
-		normals[ i + 2 ] = nz;
-
-		normals[ i + 3 ] = nx;
-		normals[ i + 4 ] = ny;
-		normals[ i + 5 ] = nz;
-
-		normals[ i + 6 ] = nx;
-		normals[ i + 7 ] = ny;
-		normals[ i + 8 ] = nz;
-
-		// colors
-
-		var vx = ( x / n ) + 0.5;
-		var vy = ( y / n ) + 0.5;
-		var vz = ( z / n ) + 0.5;
-
-		color.setRGB( vx, vy, vz );
-
-		colors[ i ]     = color.r;
-		colors[ i + 1 ] = color.g;
-		colors[ i + 2 ] = color.b;
-
-		colors[ i + 3 ] = color.r;
-		colors[ i + 4 ] = color.g;
-		colors[ i + 5 ] = color.b;
-
-		colors[ i + 6 ] = color.r;
-		colors[ i + 7 ] = color.g;
-		colors[ i + 8 ] = color.b;
-
-	}
-
-	geometry.addAttribute( 'index', new THREE.BufferAttribute( indices, 1 ) );
-	geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-	geometry.addAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
-	geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
-
-	geometry.computeBoundingSphere();
-
 	var material = new THREE.MeshPhongMaterial( {
-		color: 0xaaaaaa, specular: 0xffffff, shininess: 250,
+		color: 0xddeeff, specular: 0xff9999, shininess: 500,
 		side: THREE.DoubleSide, vertexColors: THREE.VertexColors
 	} );
 
-	mesh = new THREE.Mesh( geometry, material );
-	//scene.add( mesh );
+	var geometryJson= {
+							"vertices":[0.309,-0.809,0.618,0.809,-0.618,0.309,0.618,-0.309,0.809,1,0.309,0.191,0.809,0.618,0.309,0.618,0.309,0.809,0.809,
+								0,0.691,0.191,-1,0.309,-0.191,-1,0.309,-0.191,-1,-0.309,0.191,-1,-0.309,1,-0.309,-0.191,0.809,-0.618,-0.309,0.618,-0.309,
+								-0.809,0.809,0,-0.691,0,0.691,-0.809,0.309,0.809,-0.618,0.618,0.309,-0.809,0.309,0.191,-1,1,0.309,-0.191,-0.309,-0.809,
+								0.618,0,-0.691,0.809,0.809,0.618,-0.309,0.691,0.809,0,-0.691,0.809,0,-0.809,0.618,0.309,-0.309,0.809,0.618,-0.191,1,0.309,
+								0.309,-0.191,-1,0.191,1,0.309,0.309,0.809,0.618,-0.809,-0.618,0.309,-0.691,-0.809,0,0,0.691,0.809,0.309,-0.809,-0.618,0,
+								-0.691,-0.809,-1,0.309,0.191,-0.809,0,0.691,-0.618,0.309,0.809,1,-0.309,0.191,-0.309,-0.809,-0.618,-1,0.309,-0.191,-1,
+								-0.309,-0.191,-1,-0.309,0.191,0.191,1,-0.309,-0.809,0.618,-0.309,-0.191,1,-0.309,-0.309,0.809,-0.618,-0.618,-0.309,0.809,
+								0.309,0.191,1,-0.309,0.191,-1,-0.309,0.191,1,-0.309,-0.191,1,0.309,-0.191,1,0.691,-0.809,0,-0.809,0,-0.691,-0.618,-0.309,
+								-0.809,-0.309,-0.191,-1,-0.618,0.309,-0.809,-0.809,-0.618,-0.309],
+							"normals":[0,-0.8507,-0.5257,0.5774,-0.5774,0.5774,0,0.3568,0.9342,-0.809,0.309,0.5,-0.9342,0,-0.3568,-0.5,-0.809,-0.309,-0.309,
+								-0.5,0.809,0,0.8507,0.5257,0.809,0.309,0.5,0,1,0,-0.5257,0,-0.8507,-0.309,0.5,0.809,-0.5774,0.5774,-0.5774,0,0,-1,-0.5774,-0.5774,
+								-0.5774,-0.809,-0.309,0.5,0,-1,0,-1,0,0,-0.5,0.809,-0.309,0.5774,0.5774,0.5774,0,0.8507,-0.5257,-0.309,0.5,-0.809,-0.8507,0.5257,
+								0,0.9342,0,-0.3568,0.9342,0,0.3568,0.809,-0.309,0.5,-0.3568,-0.9342,0,0.809,-0.309,-0.5,0.5774,0.5774,-0.5774,0,-0.8507,0.5257,
+								0.5774,-0.5774,-0.5774,-0.309,-0.5,-0.809,0.5,-0.809,0.309,0.309,0.5,-0.809,0.8507,0.5257,0,0.3568,-0.9342,0,-0.809,0.309,-0.5,1,
+								0,0,0.809,0.309,-0.5,0.309,-0.5,0.809,0,0,1,-0.8507,-0.5257,0,0,0.3568,-0.9342,-0.809,-0.309,-0.5,0.5,0.809,0.309,-0.5774,0.5774,
+								0.5774,0.5257,0,-0.8507,-0.5,-0.809,0.309,0.3568,0.9342,0,-0.3568,0.9342,0,-0.5257,0,0.8507,-0.5774,-0.5774,0.5774,-0.5,0.809,
+								0.309,0.5,0.809,-0.309,0.309,-0.5,-0.809,0.5,-0.809,-0.309,0.5257,0,0.8507,-0.9342,0,0.3568,0.309,0.5,0.809,0.8507,-0.5257,0,0,
+								-0.3568,-0.9342,0,-0.3568,0.9342],
+							"faces":[34,9,40,35,0,0,0,0,34,9,35,34,0,0,0,0,34,9,34,10,0,0,0,0,34,0,1,2,0,1,1,1,34,33,51,49,0,2,2,2,34,25,36,37,0,3,3,3,34,25,
+								37,38,0,3,3,3,34,41,55,42,0,4,4,4,34,9,32,59,0,5,5,5,34,9,59,40,0,5,5,5,34,20,21,52,0,6,6,6,34,20,52,48,0,6,6,6,34,26,33,30,0,
+								7,7,7,34,26,30,29,0,7,7,7,34,26,29,27,0,7,7,7,34,3,4,5,0,8,8,8,34,3,5,6,0,8,8,8,34,27,29,44,0,9,9,9,34,27,44,46,0,9,9,9,34,50,
+								57,56,0,10,10,10,34,50,56,55,0,10,10,10,34,50,55,58,0,10,10,10,34,26,38,51,0,11,11,11,34,26,51,33,0,11,11,11,34,45,47,58,0,12,
+								12,12,34,18,28,57,0,13,13,13,34,18,57,50,0,13,13,13,34,40,59,56,0,14,14,14,34,31,48,37,0,15,15,15,34,31,37,43,0,15,15,15,34,7,
+								8,9,0,16,16,16,34,7,9,10,0,16,16,16,34,36,41,42,0,17,17,17,34,36,42,43,0,17,17,17,34,24,46,47,0,18,18,18,34,24,47,45,0,18,18,
+								18,34,4,30,5,0,19,19,19,34,15,47,46,0,20,20,20,34,15,46,44,0,20,20,20,34,15,44,16,0,20,20,20,34,15,50,58,0,21,21,21,34,15,58,
+								47,0,21,21,21,34,24,45,41,0,22,22,22,34,24,41,36,0,22,22,22,34,24,36,25,0,22,22,22,34,11,14,19,0,23,23,23,34,3,6,39,0,24,24,24,
+								34,1,39,6,0,25,25,25,34,1,6,2,0,25,25,25,34,8,32,9,0,26,26,26,34,11,12,13,0,27,27,27,34,11,13,14,0,27,27,27,34,16,22,17,0,28,
+								28,28,34,0,21,20,0,29,29,29,34,0,20,8,0,29,29,29,34,0,8,7,0,29,29,29,34,12,34,13,0,30,30,30,34,35,40,56,0,31,31,31,34,35,56,57,
+								0,31,31,31,34,0,7,54,0,32,32,32,34,0,54,1,0,32,32,32,34,15,16,17,0,33,33,33,34,15,17,18,0,33,33,33,34,3,19,22,0,34,34,34,34,3,
+								22,23,0,34,34,34,34,3,23,4,0,34,34,34,34,7,10,54,0,35,35,35,34,41,45,58,0,36,36,36,34,41,58,55,0,36,36,36,34,3,39,11,0,37,37,37,
+								34,3,11,19,0,37,37,37,34,14,17,22,0,38,38,38,34,14,22,19,0,38,38,38,34,0,2,53,0,39,39,39,34,0,53,21,0,39,39,39,34,49,51,52,0,40,
+								40,40,34,49,52,53,0,40,40,40,34,31,43,42,0,41,41,41,34,31,42,59,0,41,41,41,34,31,59,32,0,41,41,41,34,15,18,50,0,42,42,42,34,42,
+								55,56,0,43,43,43,34,42,56,59,0,43,43,43,34,4,23,29,0,44,44,44,34,4,29,30,0,44,44,44,34,25,38,26,0,45,45,45,34,13,28,18,0,46,46,
+								46,34,13,18,17,0,46,46,46,34,13,17,14,0,46,46,46,34,8,20,31,0,47,47,47,34,8,31,32,0,47,47,47,34,23,44,29,0,48,48,48,34,24,27,46,
+								0,49,49,49,34,37,48,52,0,50,50,50,34,37,52,51,0,50,50,50,34,37,51,38,0,50,50,50,34,20,48,31,0,51,51,51,34,24,25,26,0,52,52,52,
+								34,24,26,27,0,52,52,52,34,16,44,23,0,53,53,53,34,16,23,22,0,53,53,53,34,13,34,35,0,54,54,54,34,13,35,28,0,54,54,54,34,10,34,12,
+								0,55,55,55,34,10,12,54,0,55,55,55,34,2,6,5,0,56,56,56,34,2,5,49,0,56,56,56,34,2,49,53,0,56,56,56,34,36,43,37,0,57,57,57,34,5,30,
+								33,0,58,58,58,34,5,33,49,0,58,58,58,34,1,54,12,0,59,59,59,34,1,12,11,0,59,59,59,34,1,11,39,0,59,59,59,34,28,35,57,0,60,60,60,34,
+								21,53,52,0,61,61,61]};
 
 	// Snippet from https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_collada.html
-	var loader = new THREE.ColladaLoader();
-	loader.options.convertUpAxis = true;
-	loader.load( './model.dae', function ( collada ) {
-		var object = collada.scene;
-		object.scale.set( 10, 10, 10 );
-		object.position.set( 0, 0, 0 );
-		scene.add( object );
-		var geomJSON = collada.dae.geometries['shape1-geom'].mesh.geometry3js.toJSON();
-		localStorage.setItem( 'geometry', JSON.stringify( geomJSON ) );
+	var loader = new THREE.JSONLoader();
+	var loadedGeometry = loader .parse( geometryJson );
+	mesh = new THREE.Mesh( loadedGeometry.geometry, material );
+	scene.add( mesh );
+	// loader.parse( './model.json', function ( loadedGeometry ) {
+	// 	mesh = new THREE.Mesh( loadedGeometry, material );
+	// 	scene.add( mesh );
+	// 	// var object = loaded.scene;
+	// 	// object.scale.set( 10, 10, 10 );
+	// 	// object.position.set( 0, 0, 0 );
+	// 	// scene.add( object );
+	// 	// var geomJSON = loaded.dae.geometries['shape1-geom'].mesh.geometry3js.toJSON();
+	// 	// localStorage.setItem( 'geometry', JSON.stringify( geomJSON ) );
 
-		// var dragControls = new THREE.DragControls( object.children, camera, renderer.domElement );
-		// dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
-		// dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
-	} );
+	// 	// var dragControls = new THREE.DragControls( object.children, camera, renderer.domElement );
+	// 	// dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
+	// 	// dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
+	// } );
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	
@@ -236,9 +158,6 @@ function animate() {
 function render() {
 
 	var time = Date.now() * 0.001;
-
-	mesh.rotation.x = time * 0.25;
-	mesh.rotation.y = time * 0.5;
 
 	renderer.render( scene, camera );
 

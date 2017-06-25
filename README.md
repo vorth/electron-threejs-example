@@ -1,3 +1,22 @@
+## Quick Start
+
+You can run this project both as a native desktop application (using Electron) and as a standard web application.  For the web application, assuming you have Python installed, you can simply do
+
+```
+python -m SimpleHTTPServer
+```
+and then visit ```http://localhost:8000``` in your browser.
+
+For the desktop version, assuming you have NPM installed, you should follow these steps:
+
+```
+npm install
+./node_modules/.bin/electron .
+```
+
+**Note: the remainder of this document is the original README from the project I forked.**
+
+
 ## Three.js for native application thanks to electron
 
 This post is a example of three.js game as native application.
@@ -8,7 +27,7 @@ You can use that to easily write 3d games with ease of three.js coding and still
 
 So first what is *electron* ?
 This is the new name of *atom-shell*.
-It is the 'plateform' under which [atom editor](https://atom.io/) is running.
+It is the 'platform' under which [atom editor](https://atom.io/) is running.
 It is has been introduced [in this post on atom blog](http://blog.atom.io/2015/04/23/electron.html).
 It is a very new way to build native application.
 Under the hood, electron is running chromium and node.js.
