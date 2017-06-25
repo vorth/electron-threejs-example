@@ -1,7 +1,7 @@
 ## Try vZome-Web
 
 You can try the vZome-Web application here:
-[https://vorth.github.io/vzome-electron-threejs/](https://vorth.github.io/vzome-electron-threejs/).
+[https://vorth.github.io/vzome-web/](https://vorth.github.io/vzome-web/).
 That site is simply this Github repository published using [Github Pages](https://pages.github.com/).
 
 You should see a single Zome-ball shape.  Use your scroll wheel to zoom in.  For now, there is not much you can do except zoom, rotate, and pan the view.
